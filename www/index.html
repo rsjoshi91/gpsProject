@@ -1,0 +1,186 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src * data:; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+    <script src="components/loader.js"></script>
+    
+    <link rel="stylesheet" href="components/loader.css">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script> 
+    <script>
+        ons.bootstrap();
+    var cnt=0;
+   document.addEventListener("deviceready", onDeviceReady, false);
+    function onDeviceReady() {  
+               
+        var date =Date();    
+        var formatedDate=formatDate(date);
+       // console.log("formated date is--"+formatedDate);
+        var currentHours,currentMinutes,currentSeconds,currentDD;
+        var currentTime=formatedDate.split(":");
+       // console.log("time is--"+currentTime[0]+currentTime[1]+currentTime[2]);
+        currentHours=currentTime[0];
+        currentMinutes=currentTime[1];
+        currentSeconds=currentTime[2];
+        currentDD=currentTime[3];
+        var timeLimitStatus=validateTime(currentHours,currentMinutes,currentDD);
+        //console.log("result is--"+timeLimitStatus);  
+       
+        if(timeLimitStatus==1)
+        {
+            var refreshIntervalId=setInterval(function()
+            {                
+                var date =Date();    
+                var formatedDate=formatDate(date);
+                //console.log(" in interval formated date is--"+formatedDate);
+                var currentHours,currentMinutes,currentSeconds,currentDD;
+                var currentTime=formatedDate.split(":");
+               // console.log("--time is--"+currentTime[0]+currentTime[1]+currentTime[2]);
+                currentHours=currentTime[0];
+                currentMinutes=currentTime[1];
+                currentSeconds=currentTime[2];
+                currentDD=currentTime[3];
+                var timeLimitStatus=validateTime(currentHours,currentMinutes,currentDD);
+               // console.log("--result is--"+timeLimitStatus); 
+                  
+                if(timeLimitStatus==0)
+                {      
+                   console.log("break interval");
+                   clearInterval(refreshIntervalId);
+                }
+                 
+                 navigator.geolocation.getCurrentPosition(onSuccess, onError);
+            },(1000*30));
+        }
+        
+      
+    }
+    
+    function formatDate(date)
+    {
+        var d = new Date(date);
+        var hh = d.getHours();
+        var m = d.getMinutes();
+        var s = d.getSeconds();
+        var dd = "AM";
+        var h = hh;
+        if (h >= 12) {
+            h = hh-12;
+            dd = "PM";
+        }
+        if (h == 0) {
+            h = 12;
+        }
+        
+        m = m<10?"0"+m:m;        
+        s = s<10?"0"+s:s;    
+        /* if you want 2 digit hours: */
+        h = h<10?"0"+h:h;
+    
+        var pattern = new RegExp("0?"+hh+":"+m+":"+s);
+        //console.log("current time is--"+h+":"+m+":"+s +" --- "+dd);     
+        return h+":"+m+":"+s +":"+dd; 
+    }
+     
+    function validateTime(currentHours,currentMinutes,currentDD)
+    {
+        var startHours="07",startMinute="45",startDD="AM";
+        var endHours="07",endMinute="45",endDD="PM";  
+        var flag=0;   
+         
+        if(currentDD=="AM")
+        {
+            console.log("AM"); 
+            if(startHours<=currentHours)
+            {
+                if(startMinute<=currentMinutes)
+                {
+                    //console.log("AM correct ---");
+                    flag=1;
+                }
+                else
+                {
+                    //console.log("AM correct but minutes wrong---");
+                    flag=0;
+                }
+                
+            }else{
+                 flag=0;
+                 //console.log("AM not correct ---");
+            }             
+        }
+        else             
+        {
+            console.log("PM");                  
+            if(endHours>=currentHours)
+            {
+                 
+                if(endMinute>=currentMinutes)
+                {
+                    //console.log("PM correct ---");
+                    flag=1;
+                }
+                else
+                {
+                    //console.log("PM correct but minutes wrong---");
+                    flag=0;
+                }
+            }else{
+                 flag=0;
+                 //console.log("PM not correct ---");
+            }                    
+        }      
+         return flag;  
+    }//end of function
+    
+    function onSuccess(position) { 
+      //TODO: AJAX   
+      var positionLongitude=position.coords.longitude;
+      var positionLatitude=position.coords.latitude;
+        //console.log("positionLongitude--"+positionLongitude+"positionLatitude--"+positionLatitude);
+    var jqxhr = $.ajax({
+      method: "POST", 
+      url: "http://172.20.200.71/php/core/noteServer/locationDetails.php",
+      data: { positionLongitude: positionLongitude , positionLatitude: positionLatitude } 
+    })
+    .done(function(msg) {  
+        console.log("success--"+msg);
+    })
+    .fail(function() {       
+        console.log("Error");
+    }); 
+      //console.log("longitude--"+position.coords.longitude+"  latitude--"+position.coords.latitude);
+      //$.post( "http://ip/file.ext", {longitude: position.coords.longitude, latitude: position.coords.latitude, uuid: device.uuid, nickname: 'Kaustubh'  } );
+    }
+       
+    function onError(error) {
+      alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
+    }
+    
+    function post(path, params, method) {
+          method = method || "post"; // Set method to post by default if not specified.
+          var form = document.createElement("form");
+          form.setAttribute("method", method);
+          form.setAttribute("action", path);
+          for(var key in params) {
+            if(params.hasOwnProperty(key)) {
+              var hiddenField = document.createElement("input");
+              hiddenField.setAttribute("type", "hidden");
+              hiddenField.setAttribute("name", key);
+              hiddenField.setAttribute("value", params[key]);
+              form.appendChild(hiddenField);
+            }
+        }
+        document.body.appendChild(form);
+        form.submit();
+    }         
+    </script>
+</head>
+<body>
+    <ons-sliding-menu var="app.slidingMenu" menu-page="menu.html" main-page="page1.html" side="left" type="overlay" max-slide-distance="200px">
+    </ons-sliding-menu>
+</body>
+</html>
