@@ -10,20 +10,23 @@
     <link rel="stylesheet" href="css/style.css">
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script> 
+    <!--<script src="https://maps.googleapis.com/maps/api/js?signed_in=true&libraries=places&callback=initMap" async defer></script>-->
+    
     <script>
         ons.bootstrap();
     var cnt=0;
-    var startH="";
-    var endH="";
+    var startT="";
+    var endT="";    
     
    document.addEventListener("deviceready", onDeviceReady, false);
     function onDeviceReady() { 
         modal.show();              
          var jqxhr = $.ajax( "http://172.20.200.71/php/core/noteServer/locationInfo.json" )
           .done(function(data) {
-              startH=data.Location.appConfig.defaults.start;
-              endH=data.Location.appConfig.defaults.end;
-               console.log("ajx start time is--"+startH+" End time is--"+endH);
+              startT=data.Location.appConfig.defaults.start;
+              endT=data.Location.appConfig.defaults.end;
+              //startH=data.Location.appConfig.defaults.start[0]+data.Location.appConfig.defaults.start[1];
+              //endH=data.Location.appConfig.defaults.end[0]+data.Location.appConfig.defaults.end[1];
                
                var timeLimitStatus=validateTime();
                // console.log("out sider time status--"+timeLimitStatus);
@@ -39,10 +42,10 @@
                            clearInterval(refreshIntervalId);
                         }
                        // console.log("location start");
-                       var options = {maximumAge: 0, timeout: 10000, enableHighAccuracy:true};
+                       var options = {maximumAge: 0, timeout: 2000, enableHighAccuracy:true};
                         navigator.geolocation.getCurrentPosition(onSuccess, onError,options);
                        // console.log("location end");
-                    },(1000*30));
+                    },(1000*10));
                 }
         
           })
@@ -56,23 +59,32 @@
         var date = new Date();
         var flag=0;
         
-        var currH=date.getHours();
-        // var startH=7;
-        // var endH=19;
-        //console.log("start time is--"+startH+" End time is--"+endH);
-        if(currH>=startH && currH <endH) 
-        { 
-            console.log('open hrs'); 
-            flag=1;
+        var currH=date.getHours();   
+        var currM=date.getMinutes(); 
+        var currT="";
+        console.log("currH-----"+currH);
+        // if (currH < 10) {
+        //     currH = "0" + currH; 
+        // }  
+         console.log("currM-----"+currM);  
+        if (currM < 10) {
+            currM = "0" + currM;
+        }           
+        currT =parseInt(currH+''+currM);
+        console.log("startT--"+startT+"currT--"+currT+"endT--"+endT);
+        if(currT >=startT && currT <=endT)  
+        {  
+            flag=1; 
+            console.log("open hours");   
         } 
         else
         {
-            console.log('closed hrs'); 
+            console.log('closed hrs ****'); 
             flag=0;
         }
         console.log("flag is--"+flag);
         return flag;
-   }
+   }   
     
     function onSuccess(position) {          
       //TODO: AJAX   
