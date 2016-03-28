@@ -13,134 +13,75 @@
     <script>
         ons.bootstrap();
     var cnt=0;
+    var startH="";
+    var endH="";
+    
    document.addEventListener("deviceready", onDeviceReady, false);
-    function onDeviceReady() {  
+    function onDeviceReady() { 
+        modal.show();              
+         var jqxhr = $.ajax( "http://172.20.200.71/php/core/noteServer/locationInfo.json" )
+          .done(function(data) {
+              startH=data.Location.appConfig.defaults.start;
+              endH=data.Location.appConfig.defaults.end;
+               console.log("ajx start time is--"+startH+" End time is--"+endH);
                
-        var date =Date();    
-        var formatedDate=formatDate(date);
-       // console.log("formated date is--"+formatedDate);
-        var currentHours,currentMinutes,currentSeconds,currentDD;
-        var currentTime=formatedDate.split(":");
-       // console.log("time is--"+currentTime[0]+currentTime[1]+currentTime[2]);
-        currentHours=currentTime[0];
-        currentMinutes=currentTime[1];
-        currentSeconds=currentTime[2];
-        currentDD=currentTime[3];
-        var timeLimitStatus=validateTime(currentHours,currentMinutes,currentDD);
-        //console.log("result is--"+timeLimitStatus);  
-       
-        if(timeLimitStatus==1)
-        {
-            var refreshIntervalId=setInterval(function()
-            {                
-                var date =Date();    
-                var formatedDate=formatDate(date);
-                //console.log(" in interval formated date is--"+formatedDate);
-                var currentHours,currentMinutes,currentSeconds,currentDD;
-                var currentTime=formatedDate.split(":");
-               // console.log("--time is--"+currentTime[0]+currentTime[1]+currentTime[2]);
-                currentHours=currentTime[0];
-                currentMinutes=currentTime[1];
-                currentSeconds=currentTime[2];
-                currentDD=currentTime[3];
-                var timeLimitStatus=validateTime(currentHours,currentMinutes,currentDD);
-               // console.log("--result is--"+timeLimitStatus); 
-                  
-                if(timeLimitStatus==0)
-                {      
-                   console.log("break interval");
-                   clearInterval(refreshIntervalId);
+               var timeLimitStatus=validateTime();
+               // console.log("out sider time status--"+timeLimitStatus);
+                if(timeLimitStatus==1)
+                {
+                    var refreshIntervalId=setInterval(function()
+                    {    
+                        var timeLimitStatus=validateTime();
+                        console.log("time status is--"+timeLimitStatus);
+                        if(timeLimitStatus==0)
+                        {      
+                          // console.log("break interval");
+                           clearInterval(refreshIntervalId);
+                        }
+                       // console.log("location start");
+                       var options = {maximumAge: 0, timeout: 10000, enableHighAccuracy:true};
+                        navigator.geolocation.getCurrentPosition(onSuccess, onError,options);
+                       // console.log("location end");
+                    },(1000*30));
                 }
-                 
-                 navigator.geolocation.getCurrentPosition(onSuccess, onError);
-            },(1000*30));
-        }
         
-      
+          })
+          .fail(function() {
+            alert( "error" ); 
+          });
     }
-    
-    function formatDate(date)
-    {
-        var d = new Date(date);
-        var hh = d.getHours();
-        var m = d.getMinutes();
-        var s = d.getSeconds();
-        var dd = "AM";
-        var h = hh;
-        if (h >= 12) {
-            h = hh-12;
-            dd = "PM";
-        }
-        if (h == 0) {
-            h = 12;
-        }
+   
+   function validateTime()
+   {
+        var date = new Date();
+        var flag=0;
         
-        m = m<10?"0"+m:m;        
-        s = s<10?"0"+s:s;    
-        /* if you want 2 digit hours: */
-        h = h<10?"0"+h:h;
-    
-        var pattern = new RegExp("0?"+hh+":"+m+":"+s);
-        //console.log("current time is--"+h+":"+m+":"+s +" --- "+dd);     
-        return h+":"+m+":"+s +":"+dd; 
-    }
-     
-    function validateTime(currentHours,currentMinutes,currentDD)
-    {
-        var startHours="07",startMinute="45",startDD="AM";
-        var endHours="07",endMinute="45",endDD="PM";  
-        var flag=0;   
-         
-        if(currentDD=="AM")
+        var currH=date.getHours();
+        // var startH=7;
+        // var endH=19;
+        //console.log("start time is--"+startH+" End time is--"+endH);
+        if(currH>=startH && currH <endH) 
+        { 
+            console.log('open hrs'); 
+            flag=1;
+        } 
+        else
         {
-            console.log("AM"); 
-            if(startHours<=currentHours)
-            {
-                if(startMinute<=currentMinutes)
-                {
-                    //console.log("AM correct ---");
-                    flag=1;
-                }
-                else
-                {
-                    //console.log("AM correct but minutes wrong---");
-                    flag=0;
-                }
-                
-            }else{
-                 flag=0;
-                 //console.log("AM not correct ---");
-            }             
+            console.log('closed hrs'); 
+            flag=0;
         }
-        else             
-        {
-            console.log("PM");                  
-            if(endHours>=currentHours)
-            {
-                 
-                if(endMinute>=currentMinutes)
-                {
-                    //console.log("PM correct ---");
-                    flag=1;
-                }
-                else
-                {
-                    //console.log("PM correct but minutes wrong---");
-                    flag=0;
-                }
-            }else{
-                 flag=0;
-                 //console.log("PM not correct ---");
-            }                    
-        }      
-         return flag;  
-    }//end of function
+        console.log("flag is--"+flag);
+        return flag;
+   }
     
-    function onSuccess(position) { 
+    function onSuccess(position) {          
       //TODO: AJAX   
-      var positionLongitude=position.coords.longitude;
-      var positionLatitude=position.coords.latitude;
-        //console.log("positionLongitude--"+positionLongitude+"positionLatitude--"+positionLatitude);
+       modal.hide(); 
+      $("#pageContain").show();
+      $("#errorMsg").hide();
+    var positionLongitude=position.coords.longitude;
+    var positionLatitude=position.coords.latitude;
+        
     var jqxhr = $.ajax({
       method: "POST", 
       url: "http://172.20.200.71/php/core/noteServer/locationDetails.php",
@@ -152,12 +93,26 @@
     .fail(function() {       
         console.log("Error");
     }); 
-      //console.log("longitude--"+position.coords.longitude+"  latitude--"+position.coords.latitude);
+      
       //$.post( "http://ip/file.ext", {longitude: position.coords.longitude, latitude: position.coords.latitude, uuid: device.uuid, nickname: 'Kaustubh'  } );
     }
        
-    function onError(error) {
-      alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
+    function onError(error) { 
+       //console.log("get Location --fail "); 
+       modal.hide(); 
+       if(error.code==3)
+       {          
+           $("#pageContain").hide();
+           $("#errorMsg").show();           
+       }
+       console.log('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
+    }
+    
+    function exitApp()
+    {
+        modal.show();
+        setTimeout('modal.hide()', 2000);
+        navigator.app.exitApp();
     }
     
     function post(path, params, method) {
@@ -177,10 +132,11 @@
         document.body.appendChild(form);
         form.submit();
     }         
-    </script>
+    </script> 
 </head>
 <body>
     <ons-sliding-menu var="app.slidingMenu" menu-page="menu.html" main-page="page1.html" side="left" type="overlay" max-slide-distance="200px">
     </ons-sliding-menu>
 </body>
 </html>
+

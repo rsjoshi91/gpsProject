@@ -1,4 +1,4 @@
-<ons-navigator>
+<ons-navigator id="pageContain">
    <ons-page>
         <ons-toolbar>
             <div class="left">
@@ -19,4 +19,22 @@
             <img src="images/ico_swipe_right_s.png" alt="">
         </div>
     </ons-page>
+</ons-navigator>
+
+
+<ons-modal var="modal" >
+  <ons-icon icon="ion-load-c" spin="true"></ons-icon>
+  <br>
+  <br> Please wait. 
+</ons-modal>
+
+<ons-navigator id="errorMsg">
+  <ons-page id="my-page">
+    <ons-toolbar>
+      <div class="center">Please enable the GPS Location</div>
+    </ons-toolbar>
+    <p style="text-align: center">
+      <ons-button id="show-modal" modifier="light" onclick="exitApp();">Exit App</ons-button>
+    </p>
+  </ons-page>
 </ons-navigator>

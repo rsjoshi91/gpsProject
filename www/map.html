@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Place searches</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 50%;
+      }
+    </style>
+    <script>
+var map;
+var infowindow;
+
+function getDetails(place_id){
+  var service = new google.maps.places.PlacesService(map);
+  service.getDetails({placeId: place_id},function(place,status){
+      var desc=document.getElementById('desc');
+      var str;
+      str="<tr>";
+      str+="<td>"+place.name+"</td>";
+      str+="<td>"+place.formatted_phone_number+"</td>";
+      str+="<td>"+place.formatted_address+"</td>";
+      str+="</tr>";
+      desc.innerHTML+=str;
+  }, function(){
+    alert('failed');
+  });
+}
+
+function initMap(param) {
+  var pyrmont = {lat: 19.11, lng: 72.88};
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: pyrmont,
+    zoom: 15
+  });
+  infowindow = new google.maps.InfoWindow();
+  var service = new google.maps.places.PlacesService(map);
+  if(!param) {
+    service.nearbySearch({
+      location: pyrmont,
+      radius: 500,
+      types: ['hindu_temple']
+    }, callback);
+    var desc=document.getElementById('heading');
+    desc.innerHTML="TEMPLE";
+  } else {
+    service.nearbySearch({
+      location: pyrmont,
+      radius: 500,
+      types: [param]
+    }, callback);
+    var desc=document.getElementById('heading');
+    desc.innerHTML=param.toUpperCase();
+    var desc=document.getElementById('desc');
+        desc.innerHTML="";
+  }
+  var cityCircle = new google.maps.Circle({
+    strokeColor: '#29adcd',
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
+    fillColor: '#29adcd',
+    fillOpacity: 0.35,
+    map: map,
+    center: {lat: 19.11, lng: 72.88},
+    radius: 750
+  });
+
+}
+
+function callback(results, status) {
+  if (status === google.maps.places.PlacesServiceStatus.OK) {
+    for (var i = 0; i < results.length; i++) {
+      createMarker(results[i]);
+      if(typeof results[i].place_id != 'undefined') {
+        getDetails(results[i].place_id);
+      }
+    }
+  }
+}
+
+function createMarker(place) {
+  var placeLoc = place.geometry.location;
+  var marker = new google.maps.Marker({
+    map: map,
+    position: place.geometry.location
+  });
+
+  google.maps.event.addListener(marker, 'click', function() {
+    infowindow.setContent(place.name);
+    infowindow.open(map, this);
+  });
+}
+
+    </script>
+  </head>
+  <body>
+    <div>
+      <table>
+        <tr><td colspan="2">CHOOSE</td></tr>
+        <tr>
+          <td colspan="2">
+              <button onclick="initMap('accounting');">Acounting</button>
+              <button onclick="initMap('airport');">Airport</button>
+              <button onclick="initMap('amusement_park');">Amusement park</button>
+              <button onclick="initMap('aquarium');">Aquarium</button>
+              <button onclick="initMap('art_gallery');">Art Gallery</button>
+              <button onclick="initMap('atm');">ATM</button>
+              <button onclick="initMap('bakery');">Bakery</button>
+              <button onclick="initMap('bank');">Bank</button>
+              <button onclick="initMap('bar');">Bar</button>
+              <button onclick="initMap('beauty_salon');">Beauty Salon</button>
+              <button onclick="initMap('bicycle_store');">Bicycle Store</button>
+              <button onclick="initMap('book_store');">Book Store</button>
+              <button onclick="initMap('bowling_alley');">Bowling Alley</button>
+              <button onclick="initMap('bus_station');">Bus Station</button>
+              <button onclick="initMap('cafe');">Cafe</button>
+              <button onclick="initMap('campground');">Campground</button>
+              <button onclick="initMap('car_dealer');">Car Dealer</button>
+              <button onclick="initMap('car_rental');">Car Rental</button>
+              <button onclick="initMap('car_repair');">Car Repair</button>
+              <button onclick="initMap('car_wash');">Car Wash</button>
+              <button onclick="initMap('casino');">Casino</button>
+              <button onclick="initMap('cemetery');">Cementry</button>
+              <button onclick="initMap('church');">Church</button>
+              <button onclick="initMap('city_hall');">City Hall</button>
+              <button onclick="initMap('clothing_store');">Clothin Store</button>
+              <button onclick="initMap('convenience_store');">Convinience store</button>
+              <button onclick="initMap('courthouse');">Court House</button>
+              <button onclick="initMap('dentist');">Dentist</button>
+              <button onclick="initMap('department_store');">Department Store</button>
+              <button onclick="initMap('doctor');">Doctor</button>
+              <button onclick="initMap('electrician');">Electrician</button>
+              <button onclick="initMap('electronics_store');">Electronics Store</button>
+              <button onclick="initMap('embassy');">Embassy</button>
+              <button onclick="initMap('establishment');">Establishmemnt</button>
+              <button onclick="initMap('finance');">Finance</button>
+              <button onclick="initMap('fire_station');">Fire Station</button>
+              <button onclick="initMap('florist');">Florist</button>
+              <button onclick="initMap('food');">Food</button>
+              <button onclick="initMap('funeral_home');">Funeral Home</button>
+              <button onclick="initMap('furniture_store');">Furniture Store</button>
+              <button onclick="initMap('gas_station');">Gas Station</button>
+              <button onclick="initMap('general_contractor');">General Contractor</button>
+              <button onclick="initMap('grocery_or_supermarket');">Grocery or Super market</button>
+              <button onclick="initMap('gym');">Gym</button>
+              <button onclick="initMap('hair_care');">Hair Care</button>
+              <button onclick="initMap('hardware_store');">Hardware Store</button>
+              <button onclick="initMap('health');">Health</button>
+              <button onclick="initMap('hindu_temple');">Temple</button>
+              <button onclick="initMap('home_goods_store');">Home goods store</button>
+              <button onclick="initMap('hospital');">Hospital</button>
+              <button onclick="initMap('insurance_agency');">Insurance Agency</button>
+              <button onclick="initMap('jewelry_store');">Jewelry Store</button>
+              <button onclick="initMap('laundry');">Laundry</button>
+              <button onclick="initMap('lawyer');">Lawyer</button>
+              <button onclick="initMap('library');">Library</button>
+              <button onclick="initMap('liquor_store');">Liquor</button>
+              <button onclick="initMap('local_government_office');">Local Govt Office</button>
+              <button onclick="initMap('locksmith');">Lock Smith</button>
+              <button onclick="initMap('lodging');">Lodging</button>
+              <button onclick="initMap('meal_delivery');">Meal Delivery</button>
+              <button onclick="initMap('meal_takeaway');">Meal Takeaway</button>
+              <button onclick="initMap('mosque');">Mosque</button>
+              <button onclick="initMap('movie_rental');">Movie Rental</button>
+              <button onclick="initMap('movie_theater');">Movie Theatre</button>
+              <button onclick="initMap('moving_company');">Moving Company</button>
+              <button onclick="initMap('museum');">Museum</button>
+              <button onclick="initMap('night_club');">Night Club</button>
+              <button onclick="initMap('painter');">Painter</button>
+              <button onclick="initMap('park');">Park</button>
+              <button onclick="initMap('parking');">Parking</button>
+              <button onclick="initMap('pet_store');">Pet Store</button>
+              <button onclick="initMap('pharmacy');">Pharmacy</button>
+              <button onclick="initMap('physiotherapist');">Physio therapist</button>
+              <button onclick="initMap('place_of_worship');">Place of worship</button>
+              <button onclick="initMap('plumber');">Plumber</button>
+              <button onclick="initMap('police');">Police</button>
+              <button onclick="initMap('post_office');">Post Office</button>
+              <button onclick="initMap('real_estate_agency');">Real Estate Agency</button>
+              <button onclick="initMap('restaurant');">Restuarant</button>
+              <button onclick="initMap('roofing_contractor');">Roofing Contractor</button>
+              <button onclick="initMap('rv_park');">RV Park</button>
+              <button onclick="initMap('school');">School</button>
+              <button onclick="initMap('shoe_store');">Shoe Store</button>
+              <button onclick="initMap('shopping_mall');">Shopping Mall</button>
+              <button onclick="initMap('spa');">Spa</button>
+              <button onclick="initMap('stadium');">Stadium</button>
+              <button onclick="initMap('storage');">Storage</button>
+              <button onclick="initMap('store');">Store</button>
+              <button onclick="initMap('subway_station');">Subway station</button>
+              <button onclick="initMap('synagogue');">synagogue</button>
+              <button onclick="initMap('taxi_stand');">Taxi Stand</button>
+              <button onclick="initMap('train_station');">Train station</button>
+              <button onclick="initMap('travel_agency');">Travel Agency</button>
+              <button onclick="initMap('university');">University</button>
+              <button onclick="initMap('veterinary_care');">Veterinary care</button>
+              <button onclick="initMap('zoo');">Zoo</button>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div id="map"></div>
+    <h1 id='heading'></h1>
+    <table border="1"><tbody id="desc"></tbody></table>
+    <script src="https://maps.googleapis.com/maps/api/js?signed_in=true&libraries=places&callback=initMap" async defer></script>
+  </body>
+</html>
