@@ -20,16 +20,12 @@
     
    document.addEventListener("deviceready", onDeviceReady, false);
     function onDeviceReady() { 
-        modal.show();              
+        //modal.show();              
          var jqxhr = $.ajax( "http://172.20.200.71/php/core/noteServer/locationInfo.json" )
           .done(function(data) {
               startT=data.Location.appConfig.defaults.start;
-              endT=data.Location.appConfig.defaults.end;
-              //startH=data.Location.appConfig.defaults.start[0]+data.Location.appConfig.defaults.start[1];
-              //endH=data.Location.appConfig.defaults.end[0]+data.Location.appConfig.defaults.end[1];
-               
-               var timeLimitStatus=validateTime();
-               // console.log("out sider time status--"+timeLimitStatus);
+              endT=data.Location.appConfig.defaults.end;              
+               var timeLimitStatus=validateTime();               
                 if(timeLimitStatus==1)
                 {
                     var refreshIntervalId=setInterval(function()
@@ -37,14 +33,11 @@
                         var timeLimitStatus=validateTime();
                         console.log("time status is--"+timeLimitStatus);
                         if(timeLimitStatus==0)
-                        {      
-                          // console.log("break interval");
+                        { 
                            clearInterval(refreshIntervalId);
-                        }
-                       // console.log("location start");
+                        }                      
                        var options = {maximumAge: 0, timeout: 2000, enableHighAccuracy:true};
-                        navigator.geolocation.getCurrentPosition(onSuccess, onError,options);
-                       // console.log("location end");
+                        navigator.geolocation.getCurrentPosition(onSuccess, onError,options);                       
                     },(1000*10));
                 }
         
@@ -53,101 +46,58 @@
             alert( "error" ); 
           });
     }
-   
-   function validateTime()
-   {
-        var date = new Date();
-        var flag=0;
-        
-        var currH=date.getHours();   
-        var currM=date.getMinutes(); 
-        var currT="";
-        console.log("currH-----"+currH);
-        // if (currH < 10) {
-        //     currH = "0" + currH; 
-        // }  
-         console.log("currM-----"+currM);  
-        if (currM < 10) {
-            currM = "0" + currM;
-        }           
-        currT =parseInt(currH+''+currM);
-        console.log("startT--"+startT+"currT--"+currT+"endT--"+endT);
-        if(currT >=startT && currT <=endT)  
-        {  
-            flag=1; 
-            console.log("open hours");   
-        } 
-        else
-        {
-            console.log('closed hrs ****'); 
-            flag=0;
-        }
-        console.log("flag is--"+flag);
-        return flag;
-   }   
     
-    function onSuccess(position) {          
-      //TODO: AJAX   
-       modal.hide(); 
-      $("#pageContain").show();
-      $("#errorMsg").hide();
-    var positionLongitude=position.coords.longitude;
-    var positionLatitude=position.coords.latitude;
-        
-    var jqxhr = $.ajax({
-      method: "POST", 
-      url: "http://172.20.200.71/php/core/noteServer/locationDetails.php",
-      data: { positionLongitude: positionLongitude , positionLatitude: positionLatitude } 
-    })
-    .done(function(msg) {  
-        console.log("success--"+msg);
-    })
-    .fail(function() {       
-        console.log("Error");
-    }); 
-      
-      //$.post( "http://ip/file.ext", {longitude: position.coords.longitude, latitude: position.coords.latitude, uuid: device.uuid, nickname: 'Kaustubh'  } );
-    }
+    function onSuccess(position) 
+    { 
+        //modal.hide(); 
+        $("#pageContain").show();
+        $("#errorMsg").hide();        
+    }//end of success
        
-    function onError(error) { 
-       //console.log("get Location --fail "); 
-       modal.hide(); 
+    function onError(error) 
+    { 
+      // modal.hide(); 
        if(error.code==3)
        {          
            $("#pageContain").hide();
            $("#errorMsg").show();           
-       }
-       console.log('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
-    }
+       }       
+    }//end of error
+   
+   function validateTime()
+   {
+        var date = new Date();
+        var flag=0;        
+        var currH=date.getHours();   
+        var currM=date.getMinutes(); 
+        var currT="";        
+        if (currM < 10) {
+            currM = "0" + currM;
+        }           
+        currT =parseInt(currH+''+currM);        
+        if(currT >=startT && currT <=endT)  
+        {  
+            flag=1;             
+        } 
+        else
+        {           
+            flag=0;
+        }        
+        return flag;
+   }//end of validateTime   
+    
+   
     
     function exitApp()
     {
         modal.show();
         setTimeout('modal.hide()', 2000);
         navigator.app.exitApp();
-    }
-    
-    function post(path, params, method) {
-          method = method || "post"; // Set method to post by default if not specified.
-          var form = document.createElement("form");
-          form.setAttribute("method", method);
-          form.setAttribute("action", path);
-          for(var key in params) {
-            if(params.hasOwnProperty(key)) {
-              var hiddenField = document.createElement("input");
-              hiddenField.setAttribute("type", "hidden");
-              hiddenField.setAttribute("name", key);
-              hiddenField.setAttribute("value", params[key]);
-              form.appendChild(hiddenField);
-            }
-        }
-        document.body.appendChild(form);
-        form.submit();
-    }         
+    }  
     </script> 
 </head>
 <body>
-    <ons-sliding-menu var="app.slidingMenu" menu-page="menu.html" main-page="page1.html" side="left" type="overlay" max-slide-distance="200px">
+    <ons-sliding-menu var="app.slidingMenu" menu-page="menu.html" main-page="page2.html" side="left" type="overlay" max-slide-distance="200px">
     </ons-sliding-menu>
 </body>
 </html>

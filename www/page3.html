@@ -1,15 +1,104 @@
-
-<ons-navigator>
-    <ons-page>
+<style>
+    .cardsContainer
+    {
+        border:1px solid green;
+        width:100%;
+        height:200px;
+        overflow-x: hidden;
+        overflow-y: scroll; 
+    }
+    .cards{
+        width:99%;
+        height:auto;
+        margin-top: 2%;
+        /*border:1px solid blue;*/
+        padding:5px 2px 2px 7px;
+    }
+    .cardData{
+        width:74%;
+        height:auto;
+        float: left;
+        /*border:1px solid blue;*/
+        padding: 5px 5px 5px 7px;
+        
+        -moz-box-shadow:    inset 0 0 5px #000000;
+        -webkit-box-shadow: inset 0 0 5px #000000;
+        box-shadow:         inset 0 0 5px #000000;
+    }
+    .cardImage{
+        width:19%;
+        height:auto;
+        float: left;
+        border:1px solid brown;
+    }
+    .cardTitle{
+        font-size: 22px;      
+    }
+    p{
+        margin: 3px 0 0 0;
+    }
+</style>
+<ons-navigator id="pageContain">
+   <ons-page>
         <ons-toolbar>
             <div class="left">
                 <ons-toolbar-button ng-click="app.slidingMenu.toggleMenu()"><ons-icon icon="bars"></ons-icon></ons-toolbar-button>
             </div>
-            <div class="center">Home Screen</div>
+            <div class="center">Google Map</div>
         </ons-toolbar>
-    
-        <div style="text-align: center;">
-            <iframe src="map.html" style="border:1px solid red;height:600px;"></iframe>
-        </div>  
+
+        <div style="border:1px solid red;width:100%;height:43%;margin-bottom:2%;">
+            xx            
+        </div>
+        
+        <div class="cardsContainer">
+          <div class="cards">
+            <!--<table style="width:100%;">
+                <tr>
+            		<td>                	   
+                        <b class="cardTitle"> Rate this App </b> 
+            		</td>
+                    <td style="width:20%;" rowspan="3" >
+                        <img src="images/ico_swipe_right_s.png" />
+                    </td>
+            	</tr>
+                <tr>
+                	<td> Address : xxx,yyyyyvvvvv vvvvvv<br>bbbbb </td>                    
+            	</tr>
+                <tr>
+                	<td> Button</td>                    
+            	</tr> 
+            </table>-->
+            
+            <!--<div class="cardData">
+                <b class="cardTitle"> Rate this App </b>  
+                <p>Address : xxx,yyyyy<br>bbbbb</p>
+            </div>
+            
+            <div class="cardImage">
+              <img src="images/ico_swipe_right_s.png" height="75" />
+            </div>-->  
+            
+            <ons-list>
+              <ons-list-header>Header Text</ons-list-header>
+              <ons-list-item>Item1</ons-list-item>
+              <ons-list-item>Item2</ons-list-item>
+              <ons-list-item>Item3</ons-list-item>
+              <ons-list-item>Item4</ons-list-item>
+              <ons-list-item>Item5</ons-list-item>
+              <ons-list-item>Item6</ons-list-item>
+              <ons-list-item>Item7</ons-list-item>
+              <ons-list-item>Item8</ons-list-item>
+            </ons-list>
+          </div>          
+        </div>
+        
+        
+        <ons-tabbar>
+          <ons-tab  label="Home" icon="ion-home" active="true"></ons-tab>
+          <ons-tab  label="Comments" icon="ion-chatbox-working"></ons-tab>
+          <ons-tab  label="Tags" icon="ion-ios-pricetag"></ons-tab>         
+        </ons-tabbar>
+        
     </ons-page>
 </ons-navigator>

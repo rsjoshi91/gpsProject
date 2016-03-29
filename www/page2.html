@@ -1,15 +1,266 @@
-<ons-page>
+    <style>
+       .page--shop-details__content {
+          position: absolute;
+          left: 0px;
+          right: 0px;
+          top: 0px !important;
+          bottom: 0px;
+        }
+        
+        .card {
+          background-color: white;
+          background-image: url(images/ico_swipe_right_s.png);
+          background-repeat: no-repeat;
+          background-size: cover;
+          color: white;
+          /*height: 250px;*/
+          height: 50%;
+          margin-bottom: 2%;
+        }
+        
+        .card-toolbar ons-back-button span {
+          color: white;
+        }
+        
+        .card-name {
+          font-weight: 600;
+          font-size: 20px;
+          padding: 66px 0 8px 0;
+          text-align: center;
+        }
+        
+        .card-desc {
+          font-size: 14px;
+          font-weight: 400;
+          opacity: 0.9;
+          text-align: center;
+          line-height: 1.4;
+        }
+        
+        .rating {
+          text-align: center;
+          position: relative;
+          height: 0px;
+        }
+        
+        .rating-num {
+          position: relative;
+          top: -24px;
+          height: 24px;
+          color: white;
+          line-height: 24px;
+          font-size: 12px;
+          font-weight: 600;
+          text-align: center;
+          border-radius: 4px 4px 0 0;
+          padding: 0 6px;
+          background-color: #eb482f;
+          color: white;
+          width: auto;
+          margin: 0 auto 0 auto;
+          display: inline-block;
+        }
+        
+        .rating-num ons-icon {
+          font-size: 11px;
+          vertical-align: -0px;
+        }
+        
+        .action-col {
+          text-align: center;
+          opacity: 0.4;
+          padding: 10px 0 8px;
+        }
+        
+        .action-col:active {
+          opacity: 0.7;
+        }
+        
+        .action-col ons-button {
+          padding: 0;
+          line-height: 1;
+        }
+        
+        .action-icon {
+          padding: 0 0 4px 0;
+        }
+        
+        .action-icon ons-icon {
+          font-size: 28px;
+        }
+        
+        .action-label {
+          font-size: 12px;
+        }
+        
+        .prop-desc {
+          font-size: 14px;
+          opacity: 0.7;
+        }
+        
+        .prop-desc ons-icon {
+          font-size: 14px;
+          vertical-align: -0px;
+          opacity: 0.5;
+        }
+        
+        .list-item-container {
+          line-height: 1;
+          padding: 15px 0px 15px 15px;
+        }
+        
+        .thumbnail {
+          width: 80px;
+          height: 80px;
+          border-radius: 4px;
+          -webkit-border-radius: 4px;
+        }
+        
+        .name {
+          font-weight: 500;
+          line-height: 16px;
+          font-size: 15px;
+          margin-bottom: 6px;
+        }
+        
+        .location {
+          font-size: 14px;
+          opacity: 0.4;
+          margin-bottom: 6px;
+        }
+        
+        .desc {
+          line-height: 1.2;
+          font-size: 13px;
+        }
+    </style>
+    <ons-tabbar>
+      <ons-tab page="page.html" icon="ion-search" label="Find a place" active="true">
+      </ons-tab>
+      <ons-tab page="page.html" icon="ion-heart" label="Favorites">
+      </ons-tab>
+      <ons-tab page="page.html" icon="ion-person" label="Profile">
+      </ons-tab>
+    </ons-tabbar>
 
-    <ons-toolbar>
-        <div class="left">
-            <ons-toolbar-button ng-click="app.slidingMenu.toggleMenu()"><ons-icon icon="bars"></ons-icon></ons-toolbar-button>
+    <ons-template id="page.html">
+      <ons-page modifier="shop-details">
+        <ons-toolbar modifier="transparent">
+          <div class="right">
+            <ons-toolbar-button><ons-icon icon="ion-ios-chatboxes" style="color: white"></ons-icon></ons-toolbar-button>
+          </div>
+          <div class="left">
+            <ons-toolbar-button><ons-icon icon="ion-arrow-left-c" style="color: white; font-size: 28px;" fixed-width="false"></ons-icon></ons-toolbar-button>
+          </div>
+        </ons-toolbar>
+
+        <div class="card">
+
+          <!--<div class="card-name">Onsen Sushi</div>
+          <div class="card-desc">Traditional Japanese Sushi<br>Open until 10:30pm</div>-->
+
         </div>
-        <div class="center">Page 2</div>
-    </ons-toolbar>
 
-    <div style="text-align: center">
-        <h1>Page 2</h1>
-        <ons-button ng-click="app.slidingMenu.toggleMenu()">Toggle Menu</ons-button>
-    </div>
+        <ons-list style="margin-top: 12px;height: 47%;">
+            <ons-list-item  class="list-item-container">
+               <ons-row>
+                    <ons-col width="95px">
+                      <img src="images/location1.png" class="thumbnail">
+                    </ons-col>
+                    <ons-col>
+                      <div class="name">
+                        Eiffel Tower
+                      </div>
+                      <div class="location">
+                        <i class="fa fa-map-marker"></i> Paris, France
+                      </div>
+                      <div class="desc">
+                        Eiffel Tower is the symbol of Paris and named by Gustave Eiffel.
+                      </div>
+                    </ons-col>
+                    <ons-col width="40px"></ons-col>
+                </ons-row>
+            </ons-list-item>
+            
+            
+            <ons-list-item  class="list-item-container">
+               <ons-row>
+                    <ons-col width="95px">
+                      <img src="images/location1.png" class="thumbnail">
+                    </ons-col>
+                    <ons-col>
+                      <div class="name">
+                        Eiffel Tower
+                      </div>
+                      <div class="location">
+                        <i class="fa fa-map-marker"></i> Paris, France
+                      </div>
+                      <div class="desc">
+                        Eiffel Tower is the symbol of Paris and named by Gustave Eiffel.
+                      </div>
+                    </ons-col>
+                    <ons-col width="40px"></ons-col>
+                </ons-row>
+            </ons-list-item>
+            <ons-list-item  class="list-item-container">
+               <ons-row>
+                    <ons-col width="95px">
+                      <img src="images/location1.png" class="thumbnail">
+                    </ons-col>
+                    <ons-col>
+                      <div class="name">
+                        Eiffel Tower
+                      </div>
+                      <div class="location">
+                        <i class="fa fa-map-marker"></i> Paris, France
+                      </div>
+                      <div class="desc">
+                        Eiffel Tower is the symbol of Paris and named by Gustave Eiffel.
+                      </div>
+                    </ons-col>
+                    <ons-col width="40px"></ons-col>
+                </ons-row>
+            </ons-list-item>
+            <ons-list-item  class="list-item-container">
+               <ons-row>
+                    <ons-col width="95px">
+                      <img src="images/location1.png" class="thumbnail">
+                    </ons-col>
+                    <ons-col>
+                      <div class="name">
+                        Eiffel Tower
+                      </div>
+                      <div class="location">
+                        <i class="fa fa-map-marker"></i> Paris, France
+                      </div>
+                      <div class="desc">
+                        Eiffel Tower is the symbol of Paris and named by Gustave Eiffel.
+                      </div>
+                    </ons-col>
+                    <ons-col width="40px"></ons-col>
+                </ons-row>
+            </ons-list-item>
 
-</ons-page>
+          <ons-list-item modifier="chevron">
+            <div class="prop-desc">
+              <ons-icon icon="fa-mobile"></ons-icon>
+              (111) 123-4567
+            </div>
+          </ons-list-item>
+
+          <ons-list-item modifier="chevron">
+            <div class="prop-desc">
+              <ons-icon icon="fa-book"></ons-icon>
+              Store Photos and Menus
+            </div>
+          </ons-list-item>
+          <ons-list-item modifier="chevron">
+            <div class="prop-desc">
+              <ons-icon icon="fa-clock-o"></ons-icon>
+              Make a Reservation
+            </div>
+          </ons-list-item>
+        </ons-list>
+
+      </ons-page>
+    </ons-template>
